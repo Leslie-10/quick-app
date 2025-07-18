@@ -1,0 +1,207 @@
+.registerContainer {
+  display: flex;
+  background-color: #f5fafd;
+  height: 100vh;
+
+}
+
+.imageSide {
+ flex: auto;
+ background-image: url("/inscription4.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: auto;
+  border-bottom-right-radius: 10%;
+  border-top-right-radius: 10%;
+  filter: brightness(1.1);  
+  
+}
+
+.formSide {
+  flex: 1;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: -3px;
+  background-color: #fff;
+  height: auto;
+  max-width: 750px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  margin-top: -30px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 600;
+  color: #0CB2D4;
+  font-family: 'Times New Roman', Times, serif;
+  
+}
+
+.loginText {
+  font-size: 14px;
+   color: #61758A;   
+}
+
+.link {
+  text-decoration: underline;
+  color: #0CB2D4;
+  cursor: pointer;
+}
+
+
+/* .input {
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 12px;
+  flex-direction: column;
+  justify-content: right;
+  width: 80%;
+  border-radius:10%;
+} */
+
+.input {
+  flex: 1;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #B0B3AD;   
+  border-radius: 8px;
+  background-color: #ffffff;    
+  color: #333;                  
+  font-size: 15px;
+  height: 40px;
+  margin-bottom: -13px;
+
+}
+
+.input::placeholder {
+  color: #61758A;               /* gris doux pour le placeholder */
+  opacity: 1;
+}
+
+.inputError {
+  border: 1px solid red;
+  background-color: #ffe5e5;
+}
+
+.errorText{
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: -10px; 
+}
+
+.phoneRow {
+  display: flex;
+  align-items: center;
+ justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: -12px;
+}
+
+.code {
+  background: #aaa;
+  padding: 14px;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  justify-content: space-between; 
+  align-self: center; 
+  height: 40px;
+  margin-bottom: 15px;
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  width: 100%;
+  align-self: right;
+  height: auto;
+}
+
+.eye {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.submitBtn {
+  margin-top: auto;
+  margin-bottom: -20px;
+  background-color: #0CB2D4;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 45%;
+  align-items: center;
+ align-self: center;
+ height: 50px;
+ 
+}
+
+.submitBtn:hover {
+  background-color: #099bb8;
+}
+
+.formGroup {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+} 
+
+.label {
+  width: 130px; 
+  text-align: left;
+  margin-right: 20px;
+  font-weight: 500;
+  color: #000;
+  
+}
+
+
+
+.radioGroup {
+  display: flex;
+  gap: 20px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #444;
+}

@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id              Int                 @id @default(autoincrement())
+  email           String              @unique(map: "email")
+  motDePasseHash  String               @db.VarChar(255)
+  nom             String?              @db.VarChar(255)
+  dateNaissance   DateTime?            @db.Date
+  telephone       String?              @db.VarChar(20)
+  sexe            sexe_utilisateur?
+  ville           String?               @db.VarChar(100)
+  quartier        String?               @db.VarChar(100)
+  role            role_utilisateur?     @default(client)
+  creeLe          DateTime?             @default(now()) @db.Timestamp(0)
+
+  besoins         Besoin[]
+  candidatures    candidatures[]
+  profil          profil_prestataire?
+  notifications   notifications[]
+}
+
+enum sexe_utilisateur {
+  M
+  F
+  
+}
+
+enum role_utilisateur {
+  client
+  prestataire
+  les_deux
+}
+
+model Besoin {
+  id              Int                @id @default(autoincrement())
+  titre           String             @db.VarChar(255)
+  description     String               
+  ville           String             @db.VarChar(100)
+  quartier        String             @db.VarChar(100)
+  dateRdv         DateTime
+  budget          Float
+  creeLe          DateTime           @default(now()) @db.Timestamp(0)
+
+  userId          Int
+  user            users               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categorieId     Int
+  categorie       Categorie            @relation(fields: [categorieId], references: [id])
+
+  candidatures    candidatures[]
+  notifications   notifications[]
+  @@map("besoins")
+  
+}
+
+
+
+model Categorie {
+  id            Int                       @id @default(autoincrement())
+  nom          String                     @unique
+  besoins      Besoin[] 
+}
+
+model candidatures {
+  id                    Int                    @id @default(autoincrement())
+  besoinId              Int
+  prestataireId         Int
+  biographie            String
+  professionId          Int
+  cni                   String               
+  cv                    String?               
+  attestation           String?               
+  budgetPropose         Float?
+  justificationBudget   String?
+  statut                statut_candidature     @default(envoyee)
+  creeLe                DateTime               @default(now()) @db.Timestamp(0)
+
+  besoin                Besoin                 @relation(fields: [besoinId], references: [id], onDelete: Cascade)
+  prestataire           users                  @relation(fields: [prestataireId], references: [id], onDelete: Cascade)
+  profession            profession             @relation(fields: [professionId], references: [id])
+
+  transaction           transactions?
+}
+
+enum statut_candidature {
+  envoyee
+  acceptee
+  refusee
+}
+
+model profession {
+  id             Int                    @id @default(autoincrement())
+  nom            String                 @unique @db.VarChar(100)
+
+  profils        profil_prestataire[]  // Prestataires exerçant ce métier
+  candidatures   candidatures[]
+}
+
+model profil_prestataire {
+  id                 Int                     @id @default(autoincrement())
+  userId             Int                     @unique
+  professionId       Int
+  biographie         String
+  experience         Int?
+  cni                String                  
+  cv                 String?                
+  attestation        String?                 
+  statutValidation   statut_validation       @default(en_attente)
+  creeLe             DateTime                @default(now()) @db.Timestamp(0)
+
+  user               users                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profession         profession              @relation(fields: [professionId], references: [id])
+}
+
+enum statut_validation {
+  en_attente
+  valide
+  refuse
+}
+
+model notifications {
+  id             Int                  @id @default(autoincrement())
+  userId  Int
+  message        String               @db.VarChar(255)
+  type           type_notification    @default(info)
+  lue            Boolean              @default(false)
+  creeLe         DateTime             @default(now()) @db.Timestamp(0)
+
+  besoinId       Int?
+  besoin         Besoin?             @relation(fields: [besoinId], references: [id], onDelete: Cascade)
+
+  user           users                @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum type_notification {
+  candidature
+  validation
+  refus
+  info
+}
+
+model transactions {
+  id              Int               @id @default(autoincrement())
+  candidatureId   Int               @unique
+  montant         Float
+  motif           String            @db.VarChar(255)
+  statut          statut_paiement   @default(en_attente)
+  creeLe          DateTime          @default(now()) @db.Timestamp(0)
+
+  candidature     candidatures      @relation(fields: [candidatureId], references: [id], onDelete: Cascade)
+}
+
+enum statut_paiement {
+  en_attente
+  en_cours
+  payé
+  échoué
+}
+
+
