@@ -1,9 +1,11 @@
-// /app/admin/layout.tsx
+"use client";
+
 import { ReactNode } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
+import { withAdminOnly } from "@/hooks/HOC";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
@@ -14,3 +16,5 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
+
+export default withAdminOnly(AdminLayout);

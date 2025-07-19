@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import SidebarFiltrePublications from "@/components/sidebarFiltrePublications";
 import HeaderPublications from "@/components/HeaderPublications";
 import Link from "next/link";
+import { withAuth } from "@/hooks/HOC";
 
-export default function PageAnnonces() {
+function PageAnnonces() {
   const [categorieActive, setCategorieActive] = useState<string | null>(null);
   const [annonces, setAnnonces] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     const fetchAnnonces = async () => {
@@ -17,7 +19,8 @@ export default function PageAnnonces() {
         const data = await res.json();
 
         if (Array.isArray(data)) {
-          setAnnonces(data);
+          const annoncesFiltrees = data.filter((a: any) => a.userId !== user.id);
+          setAnnonces(annoncesFiltrees);
         } else {
           console.error("Réponse inattendue de l’API :", data);
           setAnnonces([]);
@@ -73,7 +76,7 @@ export default function PageAnnonces() {
                     Budget : {a.budget} FCFA
                   </p>
                   <Link
-                    href={`/postuler/${a.titre}`}
+                    href={`/postuler/${a.id}`}
                     className="mt-4 bg-[#0CB2D4] text-white px-4 py-2 rounded-xl hover:opacity-90 w-[100px]"
                   >
                     Postuler
@@ -87,3 +90,5 @@ export default function PageAnnonces() {
     </>
   );
 }
+
+export default withAuth(PageAnnonces, "AUTHORIZED", ["client", "prestataire", "les_deux"]);

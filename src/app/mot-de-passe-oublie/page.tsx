@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import styles from "@/styles/forgot.module.css";
+import { withNoAuth } from "@/hooks/HOC";
 
-export default function MotDePasseOublie() {
+function MotDePasseOublie() {
   const [email, setEmail] = useState("");
   const [numero, setNumero] = useState("");
   const [envoye, setEnvoye] = useState(false);
@@ -149,4 +150,6 @@ export default function MotDePasseOublie() {
       </div>
     </div>
   );
-}
+}   
+
+export default withNoAuth(MotDePasseOublie);

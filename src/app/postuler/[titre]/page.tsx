@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { withAuth } from "@/hooks/HOC";
 
-export default function PagePostuler() {
+function PagePostuler() {
   const { titre } = useParams();
   const [cv, setCv] = useState<File | null>(null);
   const [cni, setCni] = useState<File | null>(null);
@@ -14,22 +15,34 @@ export default function PagePostuler() {
   const [etatValidation, setEtatValidation] = useState<"valide" | "en_attente" | "refuse" | "non">("non");
   const [budgetPropose, setBudgetPropose] = useState("");
   const [justificationBudget, setJustificationBudget] = useState("");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const [professions, setProfessions] = useState<{ id: number; nom: string }[]>([]);
 
-  // Simule les IDs pour l'exemple (à dynamiser)
-  const prestataireId = 1;
-  const besoinId = 1; // ✅ À dynamiser plus tard (depuis URL ou API)
-  const besoinUserId = 2; // 👉 À récupérer dynamiquement (ex: ID du client auteur de l'annonce)
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/admin/professions");
 
-  const professions = [
-    { id: 1, nom: "Électricité" },
-    { id: 2, nom: "Plomberie" },
-    { id: 3, nom: "Bricolage" },
-    { id: 4, nom: "Service d'entretien" },
-    { id: 5, nom: "Garde d'enfants" },
-    { id: 6, nom: "Cours particuliers" },
-    { id: 7, nom: "Déménagement" },
-    { id: 8, nom: "Informatique & Dépannage" },
-  ];
+        if (!res.ok) {
+          const message = await res.text();
+          throw new Error(`Erreur API : ${res.status} - ${message}`);
+        }
+
+        const data = await res.json();
+        console.log("🟦 Professions reçues :", data);
+
+        if (Array.isArray(data)) {
+          setProfessions(data);
+        } else {
+          throw new Error("Format de réponse inattendu");
+        }
+      } catch (error) {
+        console.error("❌ Erreur lors du chargement des professions :", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const statut = localStorage.getItem("validationPrestataire");
@@ -39,20 +52,20 @@ export default function PagePostuler() {
   }, []);
 
   // --- AJOUT CONDITION pour empêcher de postuler à sa propre annonce ---
-  if (prestataireId === besoinId) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-8">
-        <div className="bg-yellow-100 p-6 rounded-xl shadow-md max-w-lg text-center">
-          <p className="text-lg font-semibold text-yellow-800">
-            Vous ne pouvez pas postuler à votre propre annonce.
-          </p>
-          <Link href="/besoins/annonces" className="mt-4 inline-block text-[#0CB2D4] underline">
-            Retour aux publications
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // if (prestataireId === besoinId) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center px-4 py-8">
+  //       <div className="bg-yellow-100 p-6 rounded-xl shadow-md max-w-lg text-center">
+  //         <p className="text-lg font-semibold text-yellow-800">
+  //           Vous ne pouvez pas postuler à votre propre annonce.
+  //         </p>
+  //         <Link href="/besoins/annonces" className="mt-4 inline-block text-[#0CB2D4] underline">
+  //           Retour aux publications
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   
 
   const envoyerCandidature = async () => {
@@ -62,8 +75,8 @@ export default function PagePostuler() {
     }
 
     const formData = new FormData();
-    formData.append("besoinId", besoinId);
-    formData.append("prestataireId", prestataireId);
+    formData.append("besoinId", titre as string);
+    formData.append("prestataireId", user.id);
     formData.append("biographie", biographie);
     formData.append("professionId", professionId);
     formData.append("cni", cni);
@@ -208,3 +221,5 @@ export default function PagePostuler() {
     </div>
   );
 }
+
+export default withAuth(PagePostuler, "AUTHORIZED", ["client", "prestataire", "les_deux"]);
