@@ -1,12 +1,11 @@
-// src/app/services/[slug]/page.tsx
-
-'use client';
+"use client";
 
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import styles from '@/styles/ServiceDetail.module.css';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import { withAuth } from '@/hooks/HOC';
 
 const electriciens = [
   { id:'electricien-1' , name: "Jean Dupont",image: "",  },
@@ -73,7 +72,7 @@ type Props = {
   params: { slug: string };
 };
 
-export default function ServiceDetailPage({ params }: Props) {
+function ServiceDetailPage({ params }: Props) {
   const service = servicesData[params.slug];
   const sliderRef = useRef<HTMLDivElement>(null);
   const autoScrollInterval = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -177,3 +176,5 @@ export default function ServiceDetailPage({ params }: Props) {
     </main>
   );
 }
+
+export default withAuth(ServiceDetailPage, "AUTHORIZED", ["client", "prestataire", "les_deux"]);

@@ -28,16 +28,17 @@ const LoginForm = () => {
           body: JSON.stringify({
             email: email,
             motDePasse: motDePasse,
-          })
+          }),
         });
 
         const data = await res.json();
 
         if (res.ok) {
+          localStorage.setItem("user", JSON.stringify(data.utilisateur));
           if (data.utilisateur.role === "admin") {
-            router.push("/admin"); // Redirige vers le tableau de bord admin
+            router.push("/admin");
           } else {
-            router.push("/services"); // Redirige vers la page de services
+            router.push("/services");
           }
         } else {
           alert(data.message || "Une erreur s’est produite");
@@ -45,7 +46,6 @@ const LoginForm = () => {
       } catch (error) {
         alert("Erreur de connexion au serveur." + error);
       }
-
     }
   };
 
@@ -53,7 +53,9 @@ const LoginForm = () => {
     <div className={styles.loginContainer}>
       <form className={styles.formSection} onSubmit={handleSubmit}>
         <h1 className={styles.title}>HELLO!</h1>
-        <p className={styles.subtitle}>Welcome back! Veuillez entrer vos informations.</p>
+        <p className={styles.subtitle}>
+          Welcome back! Veuillez entrer vos informations.
+        </p>
 
         <label className={styles.label}>Email</label>
         <input
@@ -63,7 +65,9 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           className={`${styles.input} ${touched && !emailRegex ? styles.inputError : ""}`}
         />
-        {touched && !email && <p className={styles.errorText}>L'email est requis</p>}
+        {touched && !email && (
+          <p className={styles.errorText}>L'email est requis</p>
+        )}
         {touched && email && !emailRegex && (
           <p className={styles.errorText}>Email invalide.</p>
         )}
@@ -80,24 +84,26 @@ const LoginForm = () => {
           <p className={styles.errorText}>Le mot de passe est requis.</p>
         )}
         {touched && motDePasse && !motDePasseValide && (
-          <p className={styles.errorText}>Mot de passe trop court (Au moins 6 caractères et 2 chiffres).</p>
+          <p className={styles.errorText}>
+            Mot de passe trop court (Au moins 6 caractères et 2 chiffres).
+          </p>
         )}
 
-        <div
-          className={styles.forgotPasswordContainer}>
-          <Link href="/mot-de-passe-oublie"
-            className={styles.forgotPasswordLink}>
+        <div className={styles.forgotPasswordContainer}>
+          <Link
+            href="/mot-de-passe-oublie"
+            className={styles.forgotPasswordLink}
+          >
             Mot de passe oublié ?
           </Link>
         </div>
-
 
         <button className={styles.signInBtn}>Se connecter</button>
 
         <p className={styles.footerText}>
           Vous n'avez pas de compte ?
-          <Link href="/register"
-            className={styles.link}>S'inscrire !
+          <Link href="/register" className={styles.link}>
+            S'inscrire !
           </Link>
         </p>
       </form>

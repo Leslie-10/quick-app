@@ -5,7 +5,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   try {
     const { statut } = await req.json();
 
-    if (!["validée", "refusée"].includes(statut)) {
+    if (!["acceptee", "refusee"].includes(statut)) {
       return new NextResponse("Statut invalide", { status: 400 });
     }
 

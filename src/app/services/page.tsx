@@ -1,5 +1,10 @@
-import ServicesCard from "@/components/ServicesCard";
+"use client";
 
-export default function ServicesPage() {
+import ServicesCard from "@/components/ServicesCard";
+import { withAuth } from "@/hooks/HOC";
+
+function ServicesPage() {
   return <ServicesCard />;
 }
+
+export default withAuth(ServicesPage, "AUTHORIZED", ["client", "prestataire", "les_deux"]);

@@ -1,5 +1,6 @@
 "use client";
 
+import { withAuth } from "@/hooks/HOC";
 import { useEffect, useState } from "react";
 
 type Notification = {
@@ -9,7 +10,7 @@ type Notification = {
   lu: boolean;
 };
 
-export default function NotificationsPage() {
+function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
@@ -62,3 +63,5 @@ export default function NotificationsPage() {
     </div>
   );
 }
+
+export default withAuth(NotificationsPage, "AUTHORIZED", ["client", "prestataire", "les_deux", "admin"]);

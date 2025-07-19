@@ -1,8 +1,9 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import LoginForm from "@/components/LoginForm";
+import { withNoAuth } from "@/hooks/HOC";
 
-export default function LoginPage() {
+function LoginPage() {
   const searchParams = useSearchParams();
   const success = searchParams.get("success");
 
@@ -26,3 +27,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default withNoAuth(LoginPage);
