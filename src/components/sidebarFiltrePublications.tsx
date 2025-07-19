@@ -14,7 +14,7 @@ export default function SidebarFiltrePublications({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("/api/admin/categories");
 
         if (!res.ok) {
           const message = await res.text();

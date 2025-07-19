@@ -9,9 +9,9 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [touched, setTouched] = useState(false);
-  const [option, setOption] = useState ("");
+  const [option, setOption] = useState("");
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const motDePasseValide = motDePasse.length >= 6;
 
   const formComplet = emailRegex && motDePasseValide;
@@ -21,27 +21,31 @@ const LoginForm = () => {
     setTouched(true);
 
     if (formComplet) {
-     try {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        motDePasse: motDePasse,
-      })
-    });
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email,
+            motDePasse: motDePasse,
+          })
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (res.ok) {
-      router.push("/services"); // Redirige vers la page de services
-    } else {
-      alert(data.message || "Une erreur s’est produite");
-    }
-  } catch (error) {
-    alert("Erreur de connexion au serveur."+error);
-  }           
-                    
+        if (res.ok) {
+          if (data.utilisateur.role === "admin") {
+            router.push("/admin"); // Redirige vers le tableau de bord admin
+          } else {
+            router.push("/services"); // Redirige vers la page de services
+          }
+        } else {
+          alert(data.message || "Une erreur s’est produite");
+        }
+      } catch (error) {
+        alert("Erreur de connexion au serveur." + error);
+      }
+
     }
   };
 
@@ -59,7 +63,7 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           className={`${styles.input} ${touched && !emailRegex ? styles.inputError : ""}`}
         />
-          {touched && !email && <p className={styles.errorText}>L'email est requis</p>}
+        {touched && !email && <p className={styles.errorText}>L'email est requis</p>}
         {touched && email && !emailRegex && (
           <p className={styles.errorText}>Email invalide.</p>
         )}
@@ -72,32 +76,32 @@ const LoginForm = () => {
           onChange={(e) => setMotDePasse(e.target.value)}
           className={`${styles.input} ${touched && !motDePasseValide ? styles.inputError : ""}`}
         />
-           {touched && !motDePasse && (
+        {touched && !motDePasse && (
           <p className={styles.errorText}>Le mot de passe est requis.</p>
         )}
         {touched && motDePasse && !motDePasseValide && (
           <p className={styles.errorText}>Mot de passe trop court (Au moins 6 caractères et 2 chiffres).</p>
         )}
-         
+
         <div
-        className={styles.forgotPasswordContainer}>
-        <Link href="/mot-de-passe-oublie" 
-        className={styles.forgotPasswordLink}>
-          Mot de passe oublié ?
-        </Link>
+          className={styles.forgotPasswordContainer}>
+          <Link href="/mot-de-passe-oublie"
+            className={styles.forgotPasswordLink}>
+            Mot de passe oublié ?
+          </Link>
         </div>
-  
+
 
         <button className={styles.signInBtn}>Se connecter</button>
 
         <p className={styles.footerText}>
-          Vous n'avez pas de compte ? 
+          Vous n'avez pas de compte ?
           <Link href="/register"
-           className={styles.link}>S'inscrire !
-         </Link>
+            className={styles.link}>S'inscrire !
+          </Link>
         </p>
       </form>
- 
+
       <div className={styles.imageSection}>
         <div className={styles.circle}></div>
       </div>

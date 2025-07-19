@@ -18,7 +18,7 @@ export default function FormulaireBesoinModal({ onClose }: { onClose: () => void
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("/api/admin/categories");
         const data = await res.json();
 
         if (res.ok && Array.isArray(data)) {

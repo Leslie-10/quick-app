@@ -46,6 +46,7 @@ export async function POST(req: Request) {
         email: user.email,
         nom: user.nom,
         phone: user.telephone,
+        role: user.role,
       },
     });
   } catch (error: any) {

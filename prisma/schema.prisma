@@ -36,6 +36,7 @@ enum role_utilisateur {
   client
   prestataire
   les_deux
+  admin
 }
 
 model Besoin {

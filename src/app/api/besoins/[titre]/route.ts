@@ -9,10 +9,10 @@ export async function GET(req: Request, { params }: Params) {
   try {
     const besoin = await prisma.besoin.findFirst({
       where: { titre: params.titre },
-      select: { userId: true, titre: true },
+      select: { userId: _, titre: true },
     });
 
-    if (!besoin) {
+    if (!besoin) {_
       return NextResponse.json({ error: "Annonce non trouvée" }, { status: 404 });
     }
 
